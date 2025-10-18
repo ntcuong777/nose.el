@@ -29,7 +29,7 @@
 ;; It is also compatible with virtualenv.
 
 ;; By default, the root of a project is found by looking for any of the files
-;; '.projectile', 'setup.cfg', '.hg' and '.git'. You can add files to check for
+;; '.projectile', '.project', 'setup.cfg', '.hg' and '.git'. You can add files to check for
 ;; to the file list:
 ;;
 ;;   (add-to-list 'nose-project-root-files "something")
@@ -53,10 +53,11 @@
 ;;             (local-set-key "\C-cpm" 'nosetests-pdb-module)
 ;;             (local-set-key "\C-cp." 'nosetests-pdb-one)))
 
-(require 'cl) ;; for "reduce"
+(require 'cl-lib) ;; for "cl-reduce"
 
 (defvar nose-project-root-files '(".projectile"
                                   "setup.cfg"
+                                  ".project"
                                   ".hg"
                                   ".git"))
 (defvar nose-project-root-test 'nose-project-root)
@@ -177,7 +178,7 @@ For more details: http://pswinkels.blogspot.ca/2010/04/debugging-python-code-fro
              (file-name-directory (directory-file-name dn)))))))
 
 (defun nose-project-root (dirname)
-  (reduce '(lambda (x y) (or x y))
+  (cl-reduce (lambda (x y) (or x y))
           (mapcar (lambda (d) (member d (directory-files dirname)))
                   nose-project-root-files)))
 
